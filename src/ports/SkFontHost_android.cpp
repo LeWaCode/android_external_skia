@@ -35,10 +35,29 @@
 #ifndef SK_FONT_FILE_PREFIX
     #define SK_FONT_FILE_PREFIX          "/fonts/"
 #endif
+#ifndef LEWA_THEME_FONT_PATH
+   #define LEWA_THEME_FONT_PATH   "/data/system/face/fonts/"
+#endif
 
 bool find_name_and_style(SkStream* stream, SkString* name, SkTypeface::Style* style);
 
+static bool IsFileExist(const char* fileName){
+   FILE* fp;
+
+   fp = fopen(fileName, "r");
+   if(fp == NULL){
+      return false;
+   }else{
+      fclose(fp);
+      return true;
+   }
+}
 static void GetFullPathForSysFonts(SkString* full, const char name[]) {
+    full->set(LEWA_THEME_FONT_PATH);
+    full->append(name);
+    if(IsFileExist(full->c_str())){
+      return;
+    }
     full->set(getenv("ANDROID_ROOT"));
     full->append(SK_FONT_FILE_PREFIX);
     full->append(name);
